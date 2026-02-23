@@ -5,8 +5,6 @@
 extern int yylex();
 extern std::vector<Token> tokens;
 
-std::vector<Token> tokens;
-
 int main() {
     yylex();  // запускаем flex
 

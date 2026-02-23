@@ -33,6 +33,8 @@ void SLRParser::parse(const std::vector<Token>& tokens) {
     std::stack<int> stateStack;
     std::stack<std::string> symbolStack;
 
+    symbolStack.push("$");   // маркер дна
+
     stateStack.push(0);
 
     size_t pos = 0;
@@ -70,7 +72,7 @@ void SLRParser::parse(const std::vector<Token>& tokens) {
             break;
         }
         else {
-            std::cerr << "Syntax error at token '" << symbol << "'\n";
+            std::cout << "Syntax error at token '" << symbol << "'\n";
             break;
         }
     }

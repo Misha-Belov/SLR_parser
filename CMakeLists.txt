@@ -19,11 +19,24 @@ include_directories(
     ${CMAKE_BINARY_DIR}/generated
 )
 
-set(SOURCES
-    src/main.cpp
+# Библиотека парсера (без main)
+set(PARSER_LIB_SOURCES
     src/parser.cpp
     src/slr_table.cpp
+    src/tokens.cpp
     ${GENERATED_LEXER}
 )
 
-add_executable(slr_parser ${SOURCES})
+add_library(slr_parser_lib STATIC ${PARSER_LIB_SOURCES})
+
+# Основной исполняемый файл
+add_executable(slr_parser src/main.cpp)
+target_link_libraries(slr_parser PRIVATE slr_parser_lib)
+
+# Опция для тестов
+option(ENABLE_TESTS "Build tests" OFF)
+
+if(ENABLE_TESTS)
+    add_executable(slr_tests tests/test_parser.cpp)
+    target_link_libraries(slr_tests PRIVATE slr_parser_lib)
+endif()
