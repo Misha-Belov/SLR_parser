@@ -1,6 +1,7 @@
 %{
 #include "token.hpp"
 #include <vector>
+
 extern std::vector<Token> tokens;
 %}
 
@@ -15,7 +16,7 @@ extern std::vector<Token> tokens;
 "/"         { tokens.emplace_back(TokenType::DIV, yytext); }
 "("         { tokens.emplace_back(TokenType::LPAREN, yytext); }
 ")"         { tokens.emplace_back(TokenType::RPAREN, yytext); }
-[ \t\n]+    ; // игнорируем пробелы
-.           { /* игнорируем неизвестные символы */ }
+[ \t\n]+    ; /* игнорируем пробелы */
+.           ; /* игнорируем неизвестные символы */
 <<EOF>>     { return 0; }
 %%

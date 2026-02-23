@@ -2,15 +2,15 @@
 
 SLRParser::SLRParser() {
     productions = {
-        {"E", {"E", "+", "T"}},
-        {"E", {"E", "-", "T"}},
-        {"E", {"T"}},
-        {"T", {"T", "*", "F"}},
-        {"T", {"T", "/", "F"}},
-        {"T", {"F"}},
-        {"F", {"(", "E", ")"}},
-        {"F", {"id"}},
-        {"F", {"number"}}
+        {"E", {"E", "+", "T"}}, // 0
+        {"E", {"E", "-", "T"}}, // 1
+        {"E", {"T"}},           // 2
+        {"T", {"T", "*", "F"}}, // 3
+        {"T", {"T", "/", "F"}}, // 4
+        {"T", {"F"}},           // 5
+        {"F", {"(", "E", ")"}}, // 6
+        {"F", {"id"}},          // 7
+        {"F", {"number"}}       // 8
     };
 }
 
@@ -63,14 +63,14 @@ void SLRParser::parse(const std::vector<Token>& tokens) {
             stateStack.push(gotoState);
 
             printState(symbolStack, tokens, pos,
-                       "Reduce " + prod.lhs);
+                       "Reduce " + prod.lhs + " -> " + prod.rhs[0] + "..."); // упрощённо
         }
         else if (action.type == ActionType::ACCEPT) {
             std::cout << "ACCEPT\n";
             break;
         }
         else {
-            std::cerr << "Syntax error\n";
+            std::cerr << "Syntax error at token '" << symbol << "'\n";
             break;
         }
     }
@@ -83,15 +83,18 @@ void SLRParser::printState(
     const std::string& action) const
 {
     std::cout << "STACK: ";
+    // Выводим стек от дна к вершине
+    std::vector<std::string> elements;
     std::stack<std::string> temp = stack;
     while (!temp.empty()) {
-        std::cout << temp.top() << " ";
+        elements.push_back(temp.top());
         temp.pop();
     }
+    for (auto it = elements.rbegin(); it != elements.rend(); ++it)
+        std::cout << *it << " ";
 
-    std::cout << " | INPUT: ";
+    std::cout << "| INPUT: ";
     for (size_t i = position; i < input.size(); ++i)
         std::cout << input[i].lexeme;
-
     std::cout << " | ACTION: " << action << "\n";
 }
