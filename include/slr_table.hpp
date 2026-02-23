@@ -28,5 +28,5 @@ private:
     std::map<std::pair<int, std::string>, int> gotoTable;
 
 public:
-    SLRTable(); // заполнение таблиц
+    SLRTable();
 };

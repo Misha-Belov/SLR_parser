@@ -6,7 +6,7 @@ extern int yylex();
 extern std::vector<Token> tokens;
 
 int main() {
-    yylex();  // запускаем flex
+    yylex();  // launch flex
 
     tokens.emplace_back(TokenType::END, "$");
 

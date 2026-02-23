@@ -33,7 +33,7 @@ void SLRParser::parse(const std::vector<Token>& tokens) {
     std::stack<int> stateStack;
     std::stack<std::string> symbolStack;
 
-    symbolStack.push("$");   // маркер дна
+    symbolStack.push("$");   // bottom marker
 
     stateStack.push(0);
 
@@ -65,7 +65,7 @@ void SLRParser::parse(const std::vector<Token>& tokens) {
             stateStack.push(gotoState);
 
             printState(symbolStack, tokens, pos,
-                       "Reduce " + prod.lhs + " -> " + prod.rhs[0] + "..."); // упрощённо
+                       "Reduce " + prod.lhs + " -> " + prod.rhs[0] + "...");
         }
         else if (action.type == ActionType::ACCEPT) {
             std::cout << "ACCEPT\n";
@@ -85,7 +85,6 @@ void SLRParser::printState(
     const std::string& action) const
 {
     std::cout << "STACK: ";
-    // Выводим стек от дна к вершине
     std::vector<std::string> elements;
     std::stack<std::string> temp = stack;
     while (!temp.empty()) {

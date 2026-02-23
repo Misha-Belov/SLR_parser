@@ -12,9 +12,7 @@
 extern int yylex();
 extern std::vector<Token> tokens;
 
-// Функция запускает парсер на строке и проверяет ожидаемый результат
 bool run_parser(const std::string& input, bool expect_success) {
-    // Создаём временный файл с входной строкой
     char filename[] = "/tmp/slr_test_XXXXXX";
     int fd = mkstemp(filename);
     if (fd == -1) {
@@ -30,7 +28,6 @@ bool run_parser(const std::string& input, bool expect_success) {
     fprintf(tmp, "%s", input.c_str());
     fclose(tmp);
 
-    // Перенаправляем stdin на этот файл
     if (freopen(filename, "r", stdin) == nullptr) {
         perror("freopen");
         unlink(filename);
@@ -38,13 +35,11 @@ bool run_parser(const std::string& input, bool expect_success) {
     }
     unlink(filename);
 
-    // Сохраняем старый stdout
     int stdout_fd = dup(1);
     FILE* tmp_out = tmpfile();
     int tmp_out_fd = fileno(tmp_out);
     dup2(tmp_out_fd, 1);
 
-    // Запускаем лексер и парсер
     tokens.clear();
     yylex();
     tokens.emplace_back(TokenType::END, "$");
@@ -52,12 +47,10 @@ bool run_parser(const std::string& input, bool expect_success) {
     SLRParser parser;
     parser.parse(tokens);
 
-    // Восстанавливаем stdout
     fflush(stdout);
     dup2(stdout_fd, 1);
     close(stdout_fd);
 
-    // Читаем вывод парсера
     fseek(tmp_out, 0, SEEK_SET);
     char buffer[1024];
     std::string output;
