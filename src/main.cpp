@@ -1,12 +1,16 @@
 #include "parser.hpp"
+#include "token.hpp"
+#include <vector>
+
+extern int yylex();
+extern std::vector<Token> tokens;
+
+std::vector<Token> tokens;
 
 int main() {
-    std::vector<Token> tokens = {
-        {TokenType::ID, "x"},
-        {TokenType::MUL, "*"},
-        {TokenType::ID, "y"},
-        {TokenType::END, "$"}
-    };
+    yylex();  // запускаем flex
+
+    tokens.emplace_back(TokenType::END, "$");
 
     SLRParser parser;
     parser.parse(tokens);

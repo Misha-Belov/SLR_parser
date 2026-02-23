@@ -10,14 +10,17 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # -----------------------------
 find_package(FLEX REQUIRED)
 
+file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/generated)
+
 # Путь к lexer.l
 set(LEXER_FILE ${CMAKE_SOURCE_DIR}/lexer/lexer.l)
+set(GENERATED_LEXER ${CMAKE_BINARY_DIR}/generated/lexer.cpp)
 
 # Генерация lexer.cpp
 FLEX_TARGET(
     Lexer
     ${LEXER_FILE}
-    ${CMAKE_BINARY_DIR}/generated/lexer.cpp
+    ${GENERATED_LEXER}
 )
 
 # -----------------------------
@@ -43,9 +46,7 @@ set(SOURCES
 # -----------------------------
 add_executable(slr_parser ${SOURCES})
 
-# -----------------------------
-# Platform-specific fixes
-# -----------------------------
+# Link Flex library
 if(UNIX)
     target_link_libraries(slr_parser PRIVATE fl)
 endif()
